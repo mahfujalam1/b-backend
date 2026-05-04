@@ -3,34 +3,28 @@ import { Server } from "http";
 import config from "./app/config";
 import app from "./app";
 import { seedAdmin } from "./seed";
-
-let server: Server;
+let server: Server | null = null;
 
 async function main() {
   try {
-    if (mongoose.connection.readyState !== 1) {
-      await mongoose.connect(config.database_url as string);
-      console.log('🛢 Database connected successfully');
+    await mongoose.connect(config.database_url as string);
+    console.log("✅ DB connected");
 
-      // Seed Initial Admin
-      seedAdmin().catch(err => console.log('Seeding error:', err));
-    }
+    await seedAdmin();
 
-    // Only listen if not in production (Vercel handles production listening)
-    if (process.env.NODE_ENV !== 'production') {
-      server = app.listen(config.port, () => {
-        console.log(`Hisab Nikash Pro app is listening on port ${config.port}`);
-      });
-    }
+    server = app.listen(config.port, () => {
+      console.log(`🚀 Server running on port ${config.port}`);
+    });
+
   } catch (err) {
-    console.log('❌ Database connection error:', err);
+    console.log("❌ DB connection error:", err);
   }
 }
 
 main();
 
-process.on("unhandledRejection", (err) => {
-  console.log(`😈 unhandledRejection is detected , shutting down ...`, err);
+process.on("unhandledRejection", () => {
+  console.log(`unhandledRejection on is detected, shutting down server`);
   if (server) {
     server.close(() => {
       process.exit(1);
@@ -40,8 +34,6 @@ process.on("unhandledRejection", (err) => {
 });
 
 process.on("uncaughtException", () => {
-  console.log(`😈 uncaughtException is detected , shutting down ...`);
+  console.log(`uncaughtException on is detected, shutting down server`);
   process.exit(1);
 });
-
-export default app;
