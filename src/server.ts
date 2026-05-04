@@ -7,7 +7,7 @@ let server: Server | null = null;
 
 async function main() {
   try {
-    await mongoose.connect(config.database_url as string);
+    await mongoose.connect(config.database_url as string, { timeoutMS: 5000 });
     console.log("✅ DB connected");
 
     await seedAdmin();

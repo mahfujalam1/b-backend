@@ -57,6 +57,7 @@ router.get(
 // Hisab Nikash Pro specific routes
 router.post('/create-partner', auth(USER_ROLE.admin), UserController.createPartner);
 router.get('/all-partners', auth(USER_ROLE.admin, USER_ROLE.partner), UserController.getAllUsers);
+router.get('/', auth(USER_ROLE.admin), UserController.getAllUsers);
 router.delete('/:id', auth(USER_ROLE.admin), UserController.deleteUser);
 
 export const UserRoutes = router;

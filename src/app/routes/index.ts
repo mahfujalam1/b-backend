@@ -9,7 +9,7 @@ const router = Router();
 
 const moduleRoutes = [
   {
-    path: '/user',
+    path: '/users',
     route: UserRoutes,
   },
   {
@@ -17,7 +17,7 @@ const moduleRoutes = [
     route: AuthRoutes,
   },
   {
-    path: '/expense',
+    path: '/expenses',
     route: ExpenseRoutes,
   },
   {
