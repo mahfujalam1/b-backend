@@ -40,7 +40,7 @@ const createUserIntoDB = async (payload: TUser & { playerId: string }) => {
     sendEmail({
       email: payload.email,
       subject: 'Activate Your Account',
-      html: registrationSuccessEmailBody(payload.fullName, verifyCode),
+      html: registrationSuccessEmailBody(payload.fullName || 'User', verifyCode),
     });
 
     const user = await User.create(userDataPayload);
@@ -58,7 +58,7 @@ const verifyCode = async (email: string, verifyCode: number) => {
   if (!user) {
     throw new AppError(httpStatus.NOT_FOUND, 'User not found');
   }
-  if (user.codeExpireIn < new Date(Date.now())) {
+  if (user.codeExpireIn && user.codeExpireIn < new Date(Date.now())) {
     throw new AppError(httpStatus.BAD_REQUEST, 'Verify code is expired');
   }
   if (verifyCode !== user.verifyCode) {
@@ -84,12 +84,12 @@ const verifyCode = async (email: string, verifyCode: number) => {
   };
   const accessToken = createToken(
     jwtPayload,
-    config.jwt_access_screet as string,
+    config.jwt_access_secret as string,
     config.jwt_access_expires_in
   );
   const refreshToken = createToken(
     jwtPayload,
-    config.jwt_access_screet as string,
+    config.jwt_access_secret as string,
     config.jwt_access_expires_in
   );
 
@@ -125,7 +125,7 @@ const resendVerifyCode = async (email: string) => {
     sendEmail({
       email: user.email,
       subject: 'Activate Your Account',
-      html: registrationSuccessEmailBody('Dear', updateUser.verifyCode),
+      html: registrationSuccessEmailBody('Dear', updateUser.verifyCode!),
     });
   } catch (err) {
     console.log(err)

@@ -4,10 +4,10 @@ import { TUserRole } from './user-interface';
 export const createToken = (
   jwtPayload: { id: string; email: string; role: TUserRole },
   secret: string,
-  expiresIn: number,
+  expiresIn: string | number,
 ) => {
   const token = jwt.sign(jwtPayload, secret, {
-    expiresIn: expiresIn,
+    expiresIn: expiresIn as any,
   });
   return token;
 };

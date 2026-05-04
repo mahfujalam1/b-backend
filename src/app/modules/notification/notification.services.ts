@@ -51,7 +51,7 @@ const seeNotification = async (user: JwtPayload) => {
         result = await Notification.updateMany(
             { $or: [{ receiver: USER_ROLE.admin }, { receiver: 'all' }] },
             { $addToSet: { seenBy: user.profileId } },
-            { runValidators: true, new: true }
+            { runValidators: true }
         );
         const adminUnseenNotificationCount = await getAdminNotificationCount();
         const notificationCount = await getNotificationCount();
@@ -62,7 +62,7 @@ const seeNotification = async (user: JwtPayload) => {
         result = await Notification.updateMany(
             { $or: [{ receiver: user.profileId }, { receiver: 'all' }] },
             { $addToSet: { seenBy: user.profileId } },
-            { runValidators: true, new: true }
+            { runValidators: true }
         );
     }
     const notificationCount = await getNotificationCount(user.profileId);

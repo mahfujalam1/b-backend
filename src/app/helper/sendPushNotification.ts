@@ -57,8 +57,8 @@ export const sendSinglePushNotification = async (
     data: NotificationData = {}
 ) => {
     const user = await User.findById(userId).select('playerIds');
-    if (!user || !user.playerIds.length) return;
-    return sendNotification(user.playerIds, title, message, data);
+    if (!user || !user.playerIds || user.playerIds.length === 0) return;
+    return sendNotification(user.playerIds!, title, message, data);
 };
 
 // Send notification to multiple users by userIds

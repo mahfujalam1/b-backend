@@ -39,7 +39,7 @@ const logInUserIntoDB = async (payload: TLogin & { playerId?: string }) => {
    sendEmail({
       email: payload.email,
       subject: 'Activate Your Account',
-      html: registrationSuccessEmailBody(user.fullName, verifyCode),
+      html: registrationSuccessEmailBody(user.fullName || 'User', verifyCode),
     });
 
     return { email_verification: false };
@@ -85,12 +85,12 @@ const logInUserIntoDB = async (payload: TLogin & { playerId?: string }) => {
   // Create access and refresh tokens
   const accessToken = createToken(
     jwtPayload,
-    config.jwt_access_screet as string,
+    config.jwt_access_secret as string,
     config.jwt_access_expires_in
   );
   const refreshToken = createToken(
     jwtPayload,
-    config.jwt_access_screet as string,
+    config.jwt_access_secret as string,
     config.jwt_access_expires_in
   );
 
@@ -172,12 +172,12 @@ const changePasswordIntoDB = async (
 
   const accessToken = createToken(
     jwtPayload,
-    config.jwt_access_screet as string,
+    config.jwt_access_secret as string,
     config.jwt_access_expires_in
   );
   const refreshToken = createToken(
     jwtPayload,
-    config.jwt_access_screet as string,
+    config.jwt_access_secret as string,
     config.jwt_access_expires_in
   );
 
@@ -240,7 +240,7 @@ const verifyResetOtp = async (email: string, resetCode: number) => {
     throw new AppError(httpStatus.FORBIDDEN, 'This user is blocked');
   }
 
-  if (user.codeExpireIn < new Date(Date.now())) {
+  if (user.codeExpireIn && user.codeExpireIn < new Date(Date.now())) {
     throw new AppError(httpStatus.BAD_REQUEST, 'Reset code is expire');
   }
   if (user.resetCode !== Number(resetCode)) {
@@ -309,12 +309,12 @@ const resetPassword = async (payload: {
   };
   const accessToken = createToken(
     jwtPayload,
-    config.jwt_access_screet as string,
+    config.jwt_access_secret as string,
     config.jwt_access_expires_in
   );
   const refreshToken = createToken(
     jwtPayload,
-    config.jwt_access_screet as string,
+    config.jwt_access_secret as string,
     config.jwt_access_expires_in
   );
 
