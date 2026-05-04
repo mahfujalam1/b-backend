@@ -1,11 +1,11 @@
 {
   "version": 2,
-  "builds": [
-    {
-      "src": "src/server.ts",
-      "use": "@vercel/node"
+  "functions": {
+    "src/server.ts": {
+      "runtime": "@vercel/node",
+      "includeFiles": "src/app/mailTemplate/**"
     }
-  ],
+  },
   "routes": [
     {
       "src": "/(.*)",

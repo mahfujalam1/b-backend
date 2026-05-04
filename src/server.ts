@@ -4,7 +4,7 @@ import config from "./app/config";
 import app from "./app";
 import { seedAdmin } from "./seed";
 
-let server: Server | null = null;
+let server: Server;
 
 async function main() {
   try {
@@ -12,7 +12,7 @@ async function main() {
     console.log('🛢 Database connected successfully');
 
     // Seed Initial Admin
-    await seedAdmin();
+    seedAdmin().catch(err => console.log('Seeding error:', err));
 
     server = app.listen(config.port, () => {
       console.log(`Hisab Nikash Pro app is listening on port ${config.port}`);
@@ -24,8 +24,8 @@ async function main() {
 
 main();
 
-process.on("unhandledRejection", (error) => {
-  console.log(`unhandledRejection is detected, shutting down server...`, error);
+process.on("unhandledRejection", (err) => {
+  console.log(`😈 unhandledRejection is detected , shutting down ...`, err);
   if (server) {
     server.close(() => {
       process.exit(1);
@@ -35,6 +35,8 @@ process.on("unhandledRejection", (error) => {
 });
 
 process.on("uncaughtException", () => {
-  console.log(`uncaughtException is detected, shutting down server...`);
+  console.log(`😈 uncaughtException is detected , shutting down ...`);
   process.exit(1);
 });
+
+export default app;
