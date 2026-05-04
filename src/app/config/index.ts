@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import path from 'path';
 
-dotenv.config({ path: path.join(process.cwd(), '.env') });
+dotenv.config({ path: path.join(__dirname, '../../../../.env') }); // Points to new-backend/.env if config is in src/app/config
 
 export default {
   NODE_ENV: process.env.NODE_ENV,
